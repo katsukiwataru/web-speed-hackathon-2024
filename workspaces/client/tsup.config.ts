@@ -27,13 +27,14 @@ export default defineConfig(async (): Promise<Options[]> => {
       },
       env: {
         API_URL: '',
-        NODE_ENV: process.env['NODE_ENV'] || 'development',
+        NODE_ENV: 'production',
         PATH_LIST: IMAGE_PATH_LIST.join(',') || '',
       },
       esbuildOptions(options) {
         options.define = {
           ...options.define,
           global: 'globalThis',
+          'process.env.NODE_ENV': JSON.stringify('production'),
         };
         options.publicPath = '/';
       },
@@ -49,20 +50,22 @@ export default defineConfig(async (): Promise<Options[]> => {
           },
         }),
       ],
-      format: 'iife',
+      format: 'esm',
       loader: {
         '.json?file': 'file',
         '.wasm': 'binary',
       },
       metafile: true,
-      minify: false,
+      minify: true,
+      noExternal: [/.*/],
       outDir: OUTPUT_DIR,
+      outExtension: () => ({ js: '.js' }),
       platform: 'browser',
       shims: true,
-      sourcemap: 'inline',
-      splitting: false,
-      target: ['chrome58', 'firefox57', 'safari11', 'edge18'],
-      treeshake: false,
+      sourcemap: false,
+      splitting: true,
+      target: ['chrome91', 'firefox90', 'safari15', 'edge91'],
+      treeshake: true,
     },
   ];
 });
