@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -10,16 +9,17 @@ import { registerServiceWorker } from './utils/registerServiceWorker';
 const main = async () => {
   await registerServiceWorker();
 
-  $(document).ready(() => {
-    ReactDOM.hydrateRoot(
-      $('#root').get(0)!,
-      <SWRConfig value={{ revalidateIfStale: true, revalidateOnFocus: false, revalidateOnReconnect: false }}>
-        <BrowserRouter>
-          <ClientApp />
-        </BrowserRouter>
-      </SWRConfig>,
-    );
-  });
+  const injectDataElement = document.getElementById('inject-data');
+  const fallback = injectDataElement?.textContent ? JSON.parse(injectDataElement.textContent) : {};
+
+  ReactDOM.hydrateRoot(
+    document.getElementById('root')!,
+    <SWRConfig value={{ fallback, revalidateIfStale: true, revalidateOnFocus: false, revalidateOnReconnect: false }}>
+      <BrowserRouter>
+        <ClientApp />
+      </BrowserRouter>
+    </SWRConfig>,
+  );
 };
 
 main().catch(console.error);
