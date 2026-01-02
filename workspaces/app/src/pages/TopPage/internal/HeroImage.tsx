@@ -7,9 +7,9 @@ const _Wrapper = styled.div`
 
 const _Image = styled.img.attrs({
   alt: 'Cyber TOON',
-  height: 9,
+  height: 900,
   src: '/images/top-hero.webp',
-  width: 16,
+  width: 1600,
 })`
   display: block;
   width: 100%;
