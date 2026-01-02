@@ -6,8 +6,9 @@ import { ClientApp } from '@wsh-2024/app/src/index';
 
 import { registerServiceWorker } from './utils/registerServiceWorker';
 
-const main = async () => {
-  await registerServiceWorker();
+const main = () => {
+  // Service Worker は非同期で登録（ブロックしない）
+  registerServiceWorker().catch(console.error);
 
   const injectDataElement = document.getElementById('inject-data');
   const fallback = injectDataElement?.textContent ? JSON.parse(injectDataElement.textContent) : {};
@@ -22,4 +23,4 @@ const main = async () => {
   );
 };
 
-main().catch(console.error);
+main();
