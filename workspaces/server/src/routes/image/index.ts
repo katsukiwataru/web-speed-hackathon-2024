@@ -68,7 +68,7 @@ app.get(
   zValidator(
     'param',
     z.object({
-      imageFile: z.string().regex(/^[a-f0-9-]+(?:\.\w*)?$/),
+      imageFile: z.string().regex(/^[a-zA-Z0-9-]+(?:\.\w+)?$/),
     }),
   ),
   zValidator(

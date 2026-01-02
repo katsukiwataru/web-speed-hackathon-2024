@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { styled } from 'styled-components';
 
@@ -8,11 +8,14 @@ import { Text } from './foundation/components/Text';
 import { ActionLayout } from './foundation/layouts/ActionLayout';
 import { CommonLayout } from './foundation/layouts/CommonLayout';
 import { Color, Space, Typography } from './foundation/styles/variables';
-import { AuthorDetailPage } from './pages/AuthorDetailPage';
-import { BookDetailPage } from './pages/BookDetailPage';
-import { EpisodeDetailPage } from './pages/EpisodeDetailPage';
-import { SearchPage } from './pages/SearchPage';
-import { TopPage } from './pages/TopPage';
+
+const TopPage = lazy(() => import('./pages/TopPage').then((m) => ({ default: m.TopPage })));
+const BookDetailPage = lazy(() => import('./pages/BookDetailPage').then((m) => ({ default: m.BookDetailPage })));
+const EpisodeDetailPage = lazy(() =>
+  import('./pages/EpisodeDetailPage').then((m) => ({ default: m.EpisodeDetailPage })),
+);
+const AuthorDetailPage = lazy(() => import('./pages/AuthorDetailPage').then((m) => ({ default: m.AuthorDetailPage })));
+const SearchPage = lazy(() => import('./pages/SearchPage').then((m) => ({ default: m.SearchPage })));
 
 const _BackToTopButton = styled(Link)`
   display: flex;
@@ -23,11 +26,20 @@ const _BackToTopButton = styled(Link)`
   background-color: transparent;
 `;
 
+const PageFallback: React.FC = () => <></>;
+
 export const Router: React.FC = () => {
   return (
     <Routes>
       <Route element={<CommonLayout />} path={'/'}>
-        <Route element={<TopPage />} path={''} />
+        <Route
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <TopPage />
+            </Suspense>
+          }
+          path={''}
+        />
       </Route>
       <Route
         element={
@@ -44,10 +56,38 @@ export const Router: React.FC = () => {
         }
         path={'/'}
       >
-        <Route element={<BookDetailPage />} path={'books/:bookId'} />
-        <Route element={<EpisodeDetailPage />} path={'books/:bookId/episodes/:episodeId'} />
-        <Route element={<AuthorDetailPage />} path={'authors/:authorId'} />
-        <Route element={<SearchPage />} path={'search'} />
+        <Route
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <BookDetailPage />
+            </Suspense>
+          }
+          path={'books/:bookId'}
+        />
+        <Route
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <EpisodeDetailPage />
+            </Suspense>
+          }
+          path={'books/:bookId/episodes/:episodeId'}
+        />
+        <Route
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <AuthorDetailPage />
+            </Suspense>
+          }
+          path={'authors/:authorId'}
+        />
+        <Route
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <SearchPage />
+            </Suspense>
+          }
+          path={'search'}
+        />
       </Route>
     </Routes>
   );

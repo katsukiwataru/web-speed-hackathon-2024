@@ -6,15 +6,14 @@ type Params = {
 };
 
 export function getImageUrl({ format, height, imageId, width }: Params): string {
-  const url = new URL(`/images/${imageId}`, location.href);
-
-  url.searchParams.set('format', format);
+  const params = new URLSearchParams();
+  params.set('format', format);
   if (width != null) {
-    url.searchParams.set('width', `${width}`);
+    params.set('width', `${width}`);
   }
   if (height != null) {
-    url.searchParams.set('height', `${height}`);
+    params.set('height', `${height}`);
   }
 
-  return url.href;
+  return `/images/${imageId}?${params.toString()}`;
 }
